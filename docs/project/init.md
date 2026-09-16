@@ -1,0 +1,1 @@
+ This project is a refactored repository of https://github.com/de-mu-ge/EEG_cross_programe.git, mainly aimed at addressing the increasingly bloated project structure and, most importantly, researching the model algorithms.

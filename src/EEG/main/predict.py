@@ -76,7 +76,7 @@ def predict():
 
 if "__main__" == __name__:
     predict()
-
+    print(None)
 
 
 

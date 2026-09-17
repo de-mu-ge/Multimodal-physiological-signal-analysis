@@ -22,7 +22,7 @@ class EegPlayer:
 
 
 # DataRead
-def data_read():
+def data_read() -> list:
     play_list = []
 
     if os.path.exists(cache_path):
@@ -114,7 +114,7 @@ def data_read():
 
 
 # functions
-def get_negative_label(label):
+def get_negative_label(label) -> int:
     """
     0 = 消极
     1 = 积极

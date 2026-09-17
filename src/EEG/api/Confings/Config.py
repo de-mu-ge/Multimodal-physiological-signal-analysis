@@ -21,9 +21,20 @@ class Config:
     # Cache
     cache_path: str = BASE_DIR / r"src/EEG/data/cache/EegCache.npy"
 
+    # DataSet
+        # A total of 47,120 records; the data after the training set is test data
+        # Deap : 6720, Eav : 47120 - 6720.
+    
+    trains_num: int = 40400     # The first 45,000 are training data
+
+    test_known_num: int = 2500      # The first 2,500 are test data of the training set
+
     # Model
     lr : float = 0.001
-    epochs : int = 40
+    epochs : int = 30
+
+    # Log
+    log_path : str = BASE_DIR / r"src/EEG/data/out/Log/Round-by-round_inference.log"
 
     pass
 

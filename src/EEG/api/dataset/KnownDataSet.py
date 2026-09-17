@@ -1,16 +1,19 @@
 import torch
 from torch.utils.data import Dataset
 from src.EEG.api.data_read.data_read import data_read
+from src.EEG.api.Confings.Config import Config
+num = Config.test_known_num
+
+# known_datas = play_list[:num]
 
 _known_datas = None
 
 def get_known_datas():
     global _known_datas
     if _known_datas is None:
-        _known_datas = data_read()[:2500]
+        _known_datas = data_read()[:num]
     return _known_datas
 
-# known_datas = play_list[:2500]
 
 class KnownDataSet(Dataset):        # known dataset
     def __init__(self, ):

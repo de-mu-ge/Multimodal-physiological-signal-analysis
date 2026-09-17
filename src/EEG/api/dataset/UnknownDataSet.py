@@ -1,15 +1,17 @@
 import torch
 from torch.utils.data import Dataset
 from src.EEG.api.data_read.data_read import data_read
+from src.EEG.api.Confings.Config import Config
+num = Config.trains_num
 
-# unknown_datas = play_list[45000:]
+# unknown_datas = play_list[num:]
 
 _unknown_datas = None
 
 def get_unknown_datas():
     global _unknown_datas
     if _unknown_datas is None:
-        _unknown_datas = data_read()[45000:]
+        _unknown_datas = data_read()[num:]
     return _unknown_datas
 
 class UnknownDataSet(Dataset):      # unknown dataset

@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 # Import Dataset
-from src.EEG.api import TrainDataSet
+from src.EEG.api import TrainDataSet, describe
 dataloader = DataLoader(TrainDataSet(),batch_size=32,shuffle=True, num_workers=0)
 
 # Import Config
@@ -25,6 +25,8 @@ model.to(device)
 
 # Train
 def train():
+    print(describe())
+
     for epoch in range(epochs):
 
         print(f"this is {epoch + 1} epoch")     # print epochs

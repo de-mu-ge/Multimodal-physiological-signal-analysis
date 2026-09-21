@@ -1,23 +1,16 @@
 import torch
 from torch.utils.data import Dataset
+
+from src.EEG.api.dataset.split import get_splits
 from src.EEG.api.data_read.data_read import data_read
-from src.EEG.api.Confings.Config import Config
-num = Config.trains_num
 
-# unknown_datas = play_list[num:]
 
-_unknown_datas = None
-
-def get_unknown_datas():
-    global _unknown_datas
-    if _unknown_datas is None:
-        _unknown_datas = data_read()[num:]
-    return _unknown_datas
-
-class UnknownDataSet(Dataset):      # unknown dataset
-    def __init__(self, ):
-        self.data = [obj.data for obj in get_unknown_datas()]
-        self.labels = [obj.valence for obj in get_unknown_datas()]
+class UnknownDataSet(Dataset):      # unknown dataset（跨受试者：完全未参与训练的受试者）
+    def __init__(self):
+        play_list = data_read()
+        index = get_splits()["unknown"]
+        self.data = [play_list[i].data for i in index]
+        self.labels = [play_list[i].valence for i in index]
 
     def __len__(self):
         return len(self.labels)

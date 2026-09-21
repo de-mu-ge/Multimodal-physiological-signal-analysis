@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+
+# EegCache*.npy 每个约 11GB，不进仓库
+src/*/data/cache/

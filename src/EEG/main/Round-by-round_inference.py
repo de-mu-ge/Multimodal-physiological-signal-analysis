@@ -6,6 +6,7 @@ import numpy as np
 
 # Import Dataset
 from src.EEG.api import TrainDataSet
+
 train_dataloader = DataLoader(TrainDataSet(),batch_size=32,shuffle=True, num_workers=0)
 
 from src.EEG.api import KnownDataSet
@@ -13,11 +14,14 @@ known_dataloader = DataLoader(KnownDataSet(), batch_size=1,shuffle=False, num_wo
 from src.EEG.api import UnknownDataSet
 unknown_dataloader = DataLoader(UnknownDataSet(), batch_size=1,shuffle=False, num_workers=0)
 
+from src.EEG.api import describe
+
 # Import Config
 from src.EEG.api import Config
 lr = Config.lr
 epochs = Config.epochs
 log_path = Config.log_path
+out_pth = Config.Binary_emotion_classification_model_path
 
 # Logs
 import logging
@@ -28,6 +32,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
     encoding="utf-8",
 )
+
 
 # Model
 from src.EEG.api import EEGModel
@@ -41,6 +46,12 @@ model.to(device)
 
 # Round-by-round_inference
 def round_by_round_inference():
+    # 训练前先把切分打出来。known / unknown 到底是真的留出集还是训练集的子集，
+    # 看这几行就能确认，不用再去推 Config 里的数字。
+    summary = describe()
+    print(summary)
+    logging.info(summary)
+
     for epoch in range(epochs):
 
         # this is train.
@@ -66,11 +77,11 @@ def round_by_round_inference():
         logging.info(f"loss.item(): {loss_num / i}")
 
 
-        # this is preict.
+        # this is predict.
         print("")
-        dataset_nanmes = ["known_datset", "unknown_dataset"]
+        dataset_names = ["known_dataset", "unknown_dataset"]
         with torch.no_grad():
-            for (name, dataloader) in zip(dataset_nanmes, [known_dataloader, unknown_dataloader]):   # First the training set, then the test set.
+            for (name, dataloader) in zip(dataset_names, [known_dataloader, unknown_dataloader]):   # First the training set, then the test set.
                 # Init:
                 index = 0
                 negative = 0
@@ -79,7 +90,7 @@ def round_by_round_inference():
                 positive_true = 0
     
                 for i, (data, labels) in enumerate(dataloader):
-                    index += 1
+
     
                     data, labels = data.to(device), labels.to(device)
     
@@ -97,6 +108,9 @@ def round_by_round_inference():
                         positive += 1
                         if out == 1:
                             positive_true += 1
+
+                    
+                    index += 1      # **Index**
     
     
                 # std::Cout:
@@ -115,10 +129,13 @@ def round_by_round_inference():
                 logging.info(f"负标签召回率 : {negative_true / negative} ")
                 logging.info(f"正标签召回 : {positive_true / positive } ")
 
+                
     
                 print("")
                 print("")
 
+    torch.save(model.state_dict(), out_pth)     # model weight save
+    logging.info(f"model saved as {out_pth}")
 
     
 
